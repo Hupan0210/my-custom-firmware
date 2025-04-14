@@ -1,0 +1,45 @@
+# 目标平台和架构
+CONFIG_TARGET_amlogic=y
+CONFIG_TARGET_amlogic_meson8b=y
+CONFIG_TARGET_SUBTARGET="meson8b"
+CONFIG_TARGET_PROFILE="generic-armv7"
+
+# 启用 LuCI（中文界面）
+CONFIG_PACKAGE_luci=y
+CONFIG_PACKAGE_luci-i18n-chinese=y
+
+# 启用 OpenSSH（替代 Dropbear）
+CONFIG_PACKAGE_openssh-client=y
+CONFIG_PACKAGE_openssh-server=y
+CONFIG_PACKAGE_dropbear=n
+
+# 启用 AdGuardHome 或 Pi-hole
+CONFIG_PACKAGE_adguardhome=y
+# 或者启用 Pi-hole
+# CONFIG_PACKAGE_pihole=y
+
+# 启用 OpenClash（科学上网）
+CONFIG_PACKAGE_openclash=y
+
+# 启用带宽管理和流量监控
+CONFIG_PACKAGE_qos-scripts=y
+CONFIG_PACKAGE_luci-app-nlbwmon=y
+CONFIG_PACKAGE_vnstat=y
+
+# 启用 Samba（文件共享）
+CONFIG_PACKAGE_samba36-server=y
+CONFIG_PACKAGE_luci-app-samba=y
+
+# 启用 Docker（容器化服务）
+CONFIG_PACKAGE_docker=y
+CONFIG_PACKAGE_docker-compose=y
+
+# 启用 rsync 或 Nextcloud（备份和同步）
+CONFIG_PACKAGE_rsync=y
+CONFIG_PACKAGE_nextcloud=y
+
+# 启用 VLAN 管理
+CONFIG_PACKAGE_vlan=y
+
+# 启用 Home Assistant（智能家居集成）
+CONFIG_PACKAGE_homeassistant=y
