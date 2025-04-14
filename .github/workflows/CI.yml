@@ -2,38 +2,31 @@ name: OpenWrt-CI
 
 on:
   repository_dispatch:
-  
   watch:
     types: started
-    
+
 env:
   TZ: Asia/Shanghai
 
 jobs:
-
   build_openwrt:
-
     name: Build OpenWrt
-
     runs-on: ubuntu-latest
-
     if: github.event.repository.owner.id == github.event.sender.id
 
     steps:
-
       - name: Checkout
         uses: actions/checkout@v2
         with:
           ref: master
           fetch-depth: 0
-          
+
       - name: Set cache
         uses: klever1988/cachewrtbuild@main
         with:
           ccache: 'true'
-          
+
       - name: Space cleanup
-      
         env:
           DEBIAN_FRONTEND: noninteractive
         run: |
@@ -46,13 +39,20 @@ jobs:
           sudo -E apt-get clean
           sudo timedatectl set-timezone "$TZ"
 
+      - name: Copy custom config files
+        run: |
+          # 将你的自定义配置文件拷贝到 OpenWrt 编译目录
+          cp my-custom-firmware/.config $GITHUB_WORKSPACE/.config
+          cp my-custom-firmware/feeds.conf.default $GITHUB_WORKSPACE/feeds.conf.default
+          cp my-custom-firmware/config.seed $GITHUB_WORKSPACE/config.seed
+
       - name: Compile firmware
         run: |
           cd $GITHUB_WORKSPACE
           wget https://gist.githubusercontent.com/Boos4721/5944821c5899fc159fe87ed3a7f7e888/raw/b4ceece0d74f0a0556f1c2605452efaa46022cac/.build.sh 
           chmod 0755 .build.sh
           bash .build.sh
-            
+
       - name: Prepare artifact
         run: |
           mkdir -p ./artifact/firmware
@@ -73,7 +73,7 @@ jobs:
         with:
           name: AX3600_OpenWrt_Firmware
           path: ./bin/targets/
-          
+
       - name: Apply Build Commit
         run: |
           cd ./artifact/firmware/
@@ -83,7 +83,7 @@ jobs:
           git checkout -b OpenWrt
           git add *.ubi *.bin sha256sums
           git commit -sm "[bot] Autobuild: $(TZ='Asia/Shanghai' date +%m%d-%H%S)"
-          
+
       - name: Push To Github
         run: |
           cd ./artifact/firmware/
